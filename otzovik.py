@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 from datetime import datetime
+from pathlib import Path
 import os
 import re
 import requests
@@ -8,6 +9,14 @@ import logging
 import random
 import json
 import time
+
+
+def set_correct_file_structure():
+    path1 = Path(f"output_files/{campaign}/pages")
+    path1.mkdir(parents=True, exist_ok=True)
+
+    path2 = Path(f"log/{campaign}/html")
+    path2.mkdir(parents=True, exist_ok=True)
 
 
 def set_headers(ready=False):
@@ -37,7 +46,8 @@ def set_headers(ready=False):
 
 
 def wait_for_setting_capt4a():
-    state = input("Введи 1, чтобы продолжить.\n"
+    state = input("Зайди на сайт и введи каптчу. После:\n"
+                  "Введи 1, чтобы продолжить.\n"
                   "Введи 2, чтобы перезаписать headers и продолжить.\n")
     if state == "1":
         return
@@ -270,7 +280,7 @@ def main():
 def set_logger():
     _logger = logging.getLogger()
     _logger.setLevel(logging.DEBUG)
-    file_handler = logging.FileHandler('log/app.log')
+    file_handler = logging.FileHandler(f'log/{campaign}/{campaign}.log')
     file_handler.setLevel(logging.ERROR)
 
     formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
@@ -281,7 +291,6 @@ def set_logger():
 
 
 if __name__ == "__main__":
-    logger = set_logger()
     need_to_stop = False
 
     with open("config.json", "r", encoding="UTF-8") as file:
@@ -294,5 +303,8 @@ if __name__ == "__main__":
     start_page = start_page if isinstance(start_page, int) else 1
     finish_page = config_data["finish_page"]
     headers = dict()
+
+    set_correct_file_structure()
+    logger = set_logger()
 
     main()
