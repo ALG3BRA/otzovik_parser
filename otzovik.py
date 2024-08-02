@@ -11,6 +11,7 @@ import time
 
 
 def set_headers(ready=False):
+    global headers
     if not init_headers:
         headers = {"User-Agent": fake_useragent.UserAgent().random}
         print('Был установлен случайный User-Agent.\n'
@@ -20,8 +21,6 @@ def set_headers(ready=False):
 
     if not ready:
         input("Введи любой символ, чтобы установить headers\n")
-
-    global headers
 
     with open("headers.txt", "r+", encoding="UTF-8") as file:
         lines = file.read().strip().split('\n')
@@ -294,5 +293,6 @@ if __name__ == "__main__":
     start_page = config_data["start_page"]
     start_page = start_page if isinstance(start_page, int) else 1
     finish_page = config_data["finish_page"]
+    headers = dict()
 
     main()
